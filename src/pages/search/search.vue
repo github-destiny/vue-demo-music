@@ -39,6 +39,7 @@
                 this.current_keyword = keyword
                 Api.search(this.current_keyword, this.current_offset).then((data)=>{
                     this.current_list = data.data.result.songs;
+                    console.log(this.current_list);
                 })
             },
         },

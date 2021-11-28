@@ -1,5 +1,6 @@
 import axios from 'axios';
-import store from '../store'
+import store from '../store';
+import RequestUtil from "../utils/RequestUtil";
 
 const base_url = 'http://47.93.16.214:3000';
 
@@ -71,12 +72,28 @@ const api = {
         })
         return res;
     },
+    /**
+     * 获取歌曲url
+     * @param id id
+     * @returns {Promise<null>}
+     */
     async getUrl(id){
         let res = null;
         await axios.get(`${base_url}/song/url?id=${id}`).then((response)=>{
             res = response.data;
         }, (error)=>{
             res = error.response.data;
+        })
+        return res;
+    },
+    /**
+     * 获取歌曲详细信息
+     * @param id
+     */
+    async getSongDetail(id){
+        let res = null;
+        await RequestUtil.get(`song/detail?ids=${id}`).then(data => {
+            res = data;
         })
         return res;
     }

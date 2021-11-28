@@ -41,7 +41,7 @@
     },
     data() {
       return {
-        img_src: "https://fgo.wiki/images/thumb/e/e3/%E6%A3%AE%E5%85%B0%E4%B8%B8-%E5%90%89%E5%B0%94.jpg/1200px-%E6%A3%AE%E5%85%B0%E4%B8%B8-%E5%90%89%E5%B0%94.jpg"
+
       }
     },
     mounted() {
@@ -57,7 +57,7 @@
       }
     },
     computed: {
-      ...mapState(['current_url'])
+      ...mapState(['current_url', 'img_src'])
     }
   };
 </script>

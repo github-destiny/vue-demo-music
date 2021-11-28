@@ -6,14 +6,14 @@
             <span class="list-header-item">专辑</span>
         </div>
         <div class="list-content">
-            <div class="line" v-for="(item, index) in current_list" :key="item.id" :title="item.name">
-                    <span class="no" @click="play(item.id)">
+            <div class="line" v-for="(item, index) in current_list" :key="item.id">
+                    <span class="no" @click="play(item)">
                         <span class="num">{{++index}}</span>
                         <i class="iconfont" :class="{'icon-bofang' : current_id !== item.id, 'icon-zanting' : current_id === item.id}" :ref="item.id"></i>
                     </span>
-                <span class="list-item">{{item.name}}</span>
-                <span class="list-item">{{item.ar[0].name}}</span>
-                <span class="list-item">专辑</span>
+                <span class="list-item" :title="item.name">{{item.name}}</span>
+                <span class="list-item" :title="item.ar[0].name">{{item.ar[0].name}}</span>
+                <span class="list-item" :title="item.al.name">{{item.al.name}}</span>
             </div>
         </div>
     </div>
@@ -25,12 +25,12 @@
     export default {
         props : ['current_list'],
         methods : {
-            play(id){
-                Api.getUrl(id).then(data =>{
-                    console.log(data);
+            play(item){
+                this.$store.commit('updateImgSrc', item.al.picUrl)
+                Api.getUrl(item.id).then(data =>{
                     // 更新current_id
                     if(!this.$store.state.current_id){
-                        this.$store.commit('setCurrentId', id);
+                        this.$store.commit('setCurrentId', item.id);
                         // 获取url，进行播放
                         this.$store.commit('setCurrentUrl', data.data[0].url);
                         // 使当前播放状态设置为true
@@ -38,8 +38,8 @@
                         return;
                     }
                     // 如果当前点击的是同一首歌曲
-                    if(this.$store.state.current_id === id){
-                        let ref = this.$refs[id];
+                    if(this.$store.state.current_id === item.id){
+                        let ref = this.$refs[item.id];
                         let classList = ref[0].classList;
                         if(classList.contains('icon-bofang')){
                             classList.remove('icon-bofang');
@@ -57,11 +57,11 @@
                         // 更新last_id
                         this.$store.commit('setLastId', this.$store.state.current_id);
                         // 更新current_id
-                        this.$store.commit('setCurrentId', id);
+                        this.$store.commit('setCurrentId', item.id);
                         // 更新url
                         this.$store.commit('setCurrentUrl', data.data[0].url);
                         // 更新图标
-                        let ele = this.$refs[id];
+                        let ele = this.$refs[item.id];
                         ele[0].classList.remove('icon-bofang');
                         // 播放器状态重新置为true
                         this.$store.commit('changePlayState', true);
@@ -100,9 +100,11 @@
     .list-header-item:first-child{
         padding-left: 20px;
     }
-    .list-content{
+    .list-content {
         height: 90%;
         overflow: auto;
+        color: #ffffff;
+        font-weight: lighter;
     }
     .list-content::-webkit-scrollbar {
         width: 4px;

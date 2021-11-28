@@ -24,6 +24,9 @@ const mutations = {
     },
     changePlayState(state, data){
         state.play_state = data;
+    },
+    updateImgSrc(state, src){
+        state.img_src = src;
     }
 }
 
@@ -35,6 +38,7 @@ const state = {
     current_url : '',
     play_state : false,
     last_id : null,
+    img_src : 'https://fgo.wiki/images/thumb/e/e3/%E6%A3%AE%E5%85%B0%E4%B8%B8-%E5%90%89%E5%B0%94.jpg/1200px-%E6%A3%AE%E5%85%B0%E4%B8%B8-%E5%90%89%E5%B0%94.jpg'
 }
 
 const getters = {
