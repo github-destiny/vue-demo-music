@@ -5,7 +5,7 @@
             <span class="list-header-item">歌手</span>
             <span class="list-header-item">专辑</span>
         </div>
-        <div class="list-content">
+        <div class="list-content" @scroll="scroll($event)">
             <div class="line" v-for="(item, index) in current_list" :key="item.id">
                     <span class="no" @click="play(item)">
                         <span class="num">{{++index}}</span>
@@ -24,9 +24,21 @@
     import {mapState} from 'vuex';
     export default {
         props : ['current_list'],
+        data(){
+            return {
+                offset : 0
+            }
+        },
         methods : {
             play(item){
-                this.$store.commit('updateImgSrc', item.al.picUrl)
+                this.$store.commit('updateImgSrc', item.al.picUrl);
+                // 初始化本地存储
+                let local = localStorage.getItem('listened');
+                if(local === null){
+                    localStorage.setItem('listened', JSON.stringify([]));
+                }
+                // 更新本地存储
+                this.$store.commit('updateLocalStorage', item);
                 Api.getUrl(item.id).then(data =>{
                     // 更新current_id
                     if(!this.$store.state.current_id){
@@ -68,6 +80,23 @@
                     }
                 })
             },
+            scroll(event){
+                // 滚动条总高度
+                let scrollHeight = event.srcElement.scrollHeight;
+                // 滚动后据顶部高度
+                let scrollTop = event.srcElement.scrollTop;
+                // 显示高度
+                let clientHeight = event.srcElement.clientHeight;
+                if(scrollTop + clientHeight > scrollHeight - this.$store.state.REFRESH_HEIGHT){
+                    // 通知加载新的数据
+                    Api.search(this.$store.state.last_search, ++this.offset).then(data => {
+                        let songs = data.data.result.songs;
+                        this.$store.commit('updateCurrentList', songs);
+                        console.log(`加载了${this.offset}次`);
+                    })
+                }
+               // console.log(scrollHeight, scrollTop, clientHeight);
+            }
         },
         mounted(){
             // console.log(this);

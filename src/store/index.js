@@ -27,6 +27,27 @@ const mutations = {
     },
     updateImgSrc(state, src){
         state.img_src = src;
+    },
+    updateLocalStorage(state, data){
+        let flag = false;
+        if(state.listened === null){
+            state.listened = JSON.stringify([]);
+        }
+        state.listened.forEach((item)=>{
+            if(item.id === data.id){
+                flag = true;
+            }
+        })
+        if(!flag){
+            state.listened.push(data);
+            localStorage.setItem('listened', JSON.stringify(state.listened));
+        }
+    },
+    setLastSearch(state, data){
+        state.last_search = data;
+    },
+    updateCurrentList(state, data){
+        state.current_list = [...state.current_list, ...data];
     }
 }
 
@@ -38,7 +59,10 @@ const state = {
     current_url : '',
     play_state : false,
     last_id : null,
-    img_src : 'https://fgo.wiki/images/thumb/e/e3/%E6%A3%AE%E5%85%B0%E4%B8%B8-%E5%90%89%E5%B0%94.jpg/1200px-%E6%A3%AE%E5%85%B0%E4%B8%B8-%E5%90%89%E5%B0%94.jpg'
+    img_src : 'https://fgo.wiki/images/thumb/e/e3/%E6%A3%AE%E5%85%B0%E4%B8%B8-%E5%90%89%E5%B0%94.jpg/1200px-%E6%A3%AE%E5%85%B0%E4%B8%B8-%E5%90%89%E5%B0%94.jpg',
+    listened : JSON.parse(localStorage.getItem('listened')),
+    last_search : '',
+    REFRESH_HEIGHT : 10
 }
 
 const getters = {

@@ -1,12 +1,23 @@
 <template>
     <div class="listened-container">
-        <h1>这是我听过的</h1>
+        <DataContent :current_list="listened"/>
     </div>
 </template>
 
 <script>
-    export default {
+    import DataContent from "../../components/DataContent/DataContent";
+    import {mapState} from 'vuex'
 
+    export default {
+        components : {
+            DataContent
+        },
+        computed : {
+            ...mapState(['listened'])
+        },
+        mounted(){
+
+        }
     }
 </script>
 

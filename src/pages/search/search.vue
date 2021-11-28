@@ -16,6 +16,7 @@
 <script>
     import Api from '../../api/Api'
     import DataContent from '../../components/DataContent/DataContent'
+    import {mapState} from 'vuex';
     export default {
         components : {
             DataContent,
@@ -24,7 +25,6 @@
             return {
                 current_keyword : '',
                 hots : [],
-                current_list : [],
                 current_offset : 0,
                 current_play_url : '',
                 last_id : '',
@@ -36,10 +36,10 @@
         },
         methods : {
             search(keyword){
-                this.current_keyword = keyword
+                this.current_keyword = keyword;
+                this.$store.commit('setLastSearch', this.current_keyword);
                 Api.search(this.current_keyword, this.current_offset).then((data)=>{
-                    this.current_list = data.data.result.songs;
-                    console.log(this.current_list);
+                    this.$store.commit('updateCurrentList', data.data.result.songs);
                 })
             },
         },
@@ -51,7 +51,13 @@
             dk.then((data)=>{
                 this.default_keyword = data.data.realkeyword;
             })
+            if(this.$store.state.last_search !== ''){
+                this.search(this.$store.state.last_search);
+            }
         },
+        computed : {
+            ...mapState(['current_list'])
+        }
     }
 </script>
 
